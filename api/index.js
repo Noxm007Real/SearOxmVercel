@@ -4,11 +4,10 @@ export const config = {
 
 // Daftar server target. Sistem akan mencoba dari atas ke bawah.
 const instances = [
-  "https://priv.au",
+  "https://searxng.site",
   "https://search.ononoki.org",
   "https://searx.tiekoetter.com",
   "https://searxng.website",
-  "https://searxng.site",
   "https://search.bladerunn.in",
   "https://searx.namejeff.xyz",
   "https://searxng.canine.tools",
