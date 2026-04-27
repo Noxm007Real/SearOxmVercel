@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "https://searoxm-5avgwcsy.b4a.run/$1"
+    }
+  ]
+}
