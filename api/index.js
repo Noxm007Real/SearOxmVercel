@@ -74,7 +74,7 @@ const injectedHTML = `
   // KONFIGURASI MUSIK OTOMATIS
   // ==========================================
   // Ganti NAMA_USER dan REPO dengan milik Anda yang sesungguhnya!
-  const baseMusicUrl = "https://raw.githubusercontent.com/NAMA_USER/REPO/main/musik/";
+  const baseMusicUrl = "https://github.com/Noxm007Real/SearOxmVercel/raw/refs/heads/master/Music/";
   const totalSongs = 148;
 
   function startExperience() {
