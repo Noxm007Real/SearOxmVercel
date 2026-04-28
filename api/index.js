@@ -16,7 +16,7 @@ const instances = [
 ];
 
 // ==========================================
-// KODE INJEKSI: POPUP ELEGAN + WIDGET KACA + RANDOM MUSIC
+// KODE INJEKSI: POPUP ELEGAN + WIDGET KACA + DYNAMIC RANDOM MUSIC
 // ==========================================
 const injectedHTML = `
 <style>
@@ -25,11 +25,10 @@ const injectedHTML = `
   .welcome-overlay.hide { opacity: 0; pointer-events: none; }
   .welcome-overlay.hide .welcome-card { transform: translateY(30px); }
   
-  /* Styling khusus untuk Logo SearXNG */
   .welcome-logo { height: 45px; margin-bottom: 25px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.15)); }
-  
   .welcome-title { font-size: 22px; font-weight: 600; margin-bottom: 15px; letter-spacing: 0.5px; }
   .welcome-text { font-size: 14px; color: #b3b3b3; line-height: 1.6; margin-bottom: 35px; }
+  
   .welcome-btn { background: linear-gradient(135deg, #ffffff, #d4d4d4); color: #121212; border: none; padding: 14px 40px; border-radius: 30px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15); }
   .welcome-btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(255, 255, 255, 0.25); }
   
@@ -49,7 +48,6 @@ const injectedHTML = `
 <div id="welcomeOverlay" class="welcome-overlay">
   <div class="welcome-card">
     <img src="https://docs.searxng.org/_static/searxng-wordmark.svg" alt="SearXNG Logo" class="welcome-logo">
-    
     <div class="welcome-title">Eksplorasi Tanpa Jejak</div>
     <div class="welcome-text">
       Selamat datang di ruang penelusuran privat Anda. <br><br>
@@ -73,21 +71,23 @@ const injectedHTML = `
 
 <script>
   // ==========================================
-  // DAFTAR LAGU (TAMBAHKAN LINK LAGU ANDA DI SINI)
+  // KONFIGURASI MUSIK OTOMATIS
   // ==========================================
-  const playlist = [
-    "https://raw.githubusercontent.com/NAMA_USER/REPO/main/musik/lagu1.mp3",
-    "https://raw.githubusercontent.com/NAMA_USER/REPO/main/musik/lagu2.m4a",
-    "https://raw.githubusercontent.com/NAMA_USER/REPO/main/musik/lagu3.mp3"
-  ];
+  // Ganti NAMA_USER dan REPO dengan milik Anda yang sesungguhnya!
+  const baseMusicUrl = "https://raw.githubusercontent.com/NAMA_USER/REPO/main/musik/";
+  const totalSongs = 148;
 
   function startExperience() {
     var overlay = document.getElementById('welcomeOverlay');
     var audio = document.getElementById('bgMusic');
 
+    // Cek apakah lagu belum dimuat
     if (!audio.src || audio.src === window.location.href) {
-      const randomSong = playlist[Math.floor(Math.random() * playlist.length)];
-      audio.src = randomSong;
+      // Mengacak angka dari 1 sampai 148
+      const randomNum = Math.floor(Math.random() * totalSongs) + 1;
+      
+      // Menggabungkan Base URL + Angka Acak + Ekstensi
+      audio.src = baseMusicUrl + randomNum + ".m4a";
     }
 
     audio.play().catch(function(e) { console.log('Autoplay ditolak:', e); });
