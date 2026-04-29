@@ -42,7 +42,7 @@ export default async function handler(req) {
   const pesanTelegram = `🌐*Status Operasional SearOxm*\n\nSistem penelusuran privat Anda saat ini beroperasi dengan rute yang optimal dan stabil. Kami mengundang Anda untuk menikmati pengalaman berselancar tanpa jejak, diiringi oleh harmoni musik yang telah disiapkan secara khusus.\n\nAkses layanan secara penuh melalui tautan berikut:\n[🔗SearOxm](https://searoxm.vercel.app)\n\n\`\`\`🕒${timestamp}\`\`\``;
   
   // Pesan khusus untuk Discord (Formal & Elegan)
-  const pesanDiscord = `# 🌐Status Operasional SearOxm\n\`\`\`md\nSistem penelusuran privat Anda saat ini beroperasi dengan rute yang optimal dan stabil. Kami mengundang Anda untuk menikmati pengalaman berselancar tanpa jejak, diiringi oleh harmoni musik yang telah disiapkan secara khusus.\nAkses layanan secara penuh melalui tautan berikut:\`\`\`\n[🔗SearOxm](https://searoxm.vercel.app)\n~# 🕒${timestamp}`;
+  const pesanDiscord = `# 🌐Status Operasional SearOxm\n\`\`\`md\nSistem penelusuran privat Anda saat ini beroperasi dengan rute yang optimal dan stabil. Kami mengundang Anda untuk menikmati pengalaman berselancar tanpa jejak, diiringi oleh harmoni musik yang telah disiapkan secara khusus.\nAkses layanan secara penuh melalui tautan berikut:\`\`\`\n[🔗SearOxm](https://searoxm.vercel.app)\n\`\`\`md\n🕒${timestamp}\`\`\``;
   
   let laporanTelegram = "Dilewati (Token/ID tidak ada)";
   let laporanDiscord = "Dilewati (Webhook tidak ada)";
