@@ -72,7 +72,7 @@ const injectedHTML = `
     if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: 'Track #' + trackNum,
-        artist: 'Radio Eksplorasi',
+        artist: 'Noxm007 - Playlist',
         album: 'SearXNG Private',
         artwork: [{ src: 'https://docs.searxng.org/_static/searxng-wordmark.svg', sizes: '512x512', type: 'image/svg+xml' }]
       });
