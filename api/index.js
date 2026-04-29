@@ -15,7 +15,7 @@ const instances = [
 ];
 
 // ==========================================
-// KODE INJEKSI: POPUP + WIDGET + GLOBAL GESTURE UNLOCK
+// KODE INJEKSI: POPUP + WIDGET + BFCACHE AUTO-RESUME
 // ==========================================
 const injectedHTML = `
 <style>
@@ -67,33 +67,42 @@ const injectedHTML = `
   const totalSongs = 148;
   var audio = document.getElementById('bgMusic');
 
-  // FUNGSI UTAMA: Update Bar Notifikasi & Tombol Next
   function setupMediaSession(trackNum) {
     if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: 'Track #' + trackNum,
-        artist: 'Noxm007 - Playlist',
+        artist: 'Radio Eksplorasi',
         album: 'SearXNG Private',
         artwork: [{ src: 'https://docs.searxng.org/_static/searxng-wordmark.svg', sizes: '512x512', type: 'image/svg+xml' }]
       });
-      // Daftarkan ulang handler Next
       navigator.mediaSession.setActionHandler('nexttrack', playRandomSong);
       navigator.mediaSession.setActionHandler('play', () => audio.play());
       navigator.mediaSession.setActionHandler('pause', () => audio.pause());
     }
   }
 
+  // Fungsi pengaman autoplay (Anti blokir browser)
+  function safePlay() {
+    audio.play().catch(e => {
+      console.log('Autoplay ditahan, menunggu interaksi...');
+      const forcePlay = () => {
+        audio.play();
+        document.removeEventListener('click', forcePlay);
+        document.removeEventListener('touchstart', forcePlay);
+      };
+      // Mendengarkan klik ATAU sentuhan jari di HP untuk memaksa putar
+      document.addEventListener('click', forcePlay);
+      document.addEventListener('touchstart', forcePlay);
+    });
+  }
+
   function playRandomSong() {
     const randomNum = Math.floor(Math.random() * totalSongs) + 1;
     audio.src = baseMusicUrl + randomNum + ".m4a";
     audio.load();
-    audio.play().catch(e => {
-        console.log('Autoplay ditahan, menunggu klik pertama...');
-        // Jika gagal autoplay (refresh), aktifkan listener klik global
-        document.addEventListener('click', () => { audio.play(); }, { once: true });
-    });
     sessionStorage.setItem('currentTrack', randomNum);
     setupMediaSession(randomNum);
+    safePlay();
   }
 
   function startExperience() {
@@ -105,8 +114,10 @@ const injectedHTML = `
 
   function openMenu() { document.getElementById('fabOptions').classList.toggle('show'); }
 
-  // LOGIKA INTI: Saat Halaman Dimuat Ulang (Refresh / Cari)
-  document.addEventListener('DOMContentLoaded', function() {
+  // ==========================================
+  // PENGGANTI DOMContentLoaded UNTUK MENGATASI TOMBOL KEMBALI (BACK)
+  // ==========================================
+  window.addEventListener('pageshow', function(event) {
     if (sessionStorage.getItem('welcomePassed') === 'true') {
       document.getElementById('welcomeOverlay').style.display = 'none';
       
@@ -114,31 +125,32 @@ const injectedHTML = `
       const savedTime = sessionStorage.getItem('currentTime');
 
       if (savedTrack) {
-        audio.src = baseMusicUrl + savedTrack + ".m4a";
-        if (savedTime) audio.currentTime = parseFloat(savedTime);
-        audio.load();
+        // Cek apakah src file sudah benar. Hindari reset src jika lagu masih sama
+        if (!audio.src.endsWith(savedTrack + ".m4a")) {
+          audio.src = baseMusicUrl + savedTrack + ".m4a";
+          audio.load();
+          setupMediaSession(savedTrack);
+        }
         
-        // Coba putar otomatis
-        audio.play().catch(e => {
-           // Jika browser memblokir (Refresh), tunggu klik di mana saja (seperti klik tombol Cari)
-           document.addEventListener('click', () => { audio.play(); }, { once: true });
-        });
-
-        // DAFTARKAN ULANG MEDIA SESSION SETIAP REFRESH
-        setupMediaSession(savedTrack);
+        // Posisikan detik lagu seperti semula
+        if (savedTime && audio.currentTime < parseFloat(savedTime)) {
+            audio.currentTime = parseFloat(savedTime);
+        }
+        
+        // Lanjutkan lagu!
+        safePlay();
       } else {
         playRandomSong();
       }
     }
   });
 
-  // Simpan posisi detik terakhir sebelum halaman menghilang
+  // Amankan detik terakhir ke memori setiap kali berpindah, mencari, atau kembali
   window.addEventListener('beforeunload', () => {
-    if (!audio.paused) {
-      sessionStorage.setItem('currentTime', audio.currentTime);
-    }
+    sessionStorage.setItem('currentTime', audio.currentTime);
   });
 
+  // Lanjut lagu acak ketika habis
   audio.addEventListener('ended', playRandomSong);
 </script>
 `;
