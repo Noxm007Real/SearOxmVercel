@@ -2,7 +2,6 @@ export const config = {
   runtime: 'edge',
 };
 
-// Daftar server target fallback
 const instances = [
   "https://searxng.site",
   "https://search.ononoki.org",
@@ -16,7 +15,7 @@ const instances = [
 ];
 
 // ==========================================
-// KODE INJEKSI: POPUP + WIDGET KACA + MEDIA SESSION API
+// KODE INJEKSI: POPUP + WIDGET + MEDIA SESSION + SESSION STORAGE
 // ==========================================
 const injectedHTML = `
 <style>
@@ -69,49 +68,37 @@ const injectedHTML = `
 <script>
   const baseMusicUrl = "https://raw.githubusercontent.com/Noxm007Real/SearOxmVercel/master/Music/";
   const totalSongs = 148;
+  let currentTrackNum = 1;
+  var audio = document.getElementById('bgMusic');
 
-  function playRandomSong() {
-    var audio = document.getElementById('bgMusic');
-    const randomNum = Math.floor(Math.random() * totalSongs) + 1;
-    
-    // Setel dan putar lagu
-    audio.src = baseMusicUrl + randomNum + ".m4a";
-    audio.load();
-    audio.play().catch(function(e) { console.log('Musik gagal putar:', e); });
-
-    // UPDATE MEDIA SESSION (Untuk Bar Notifikasi HP)
+  function updateMediaSession(trackNum) {
     if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
-        title: 'Track #' + randomNum,
-        artist: 'Noxm007 - Playlist',
+        title: 'Track #' + trackNum,
+        artist: 'Radio Eksplorasi',
         album: 'SearXNG Private',
-        artwork: [
-          { 
-            src: 'https://docs.searxng.org/_static/searxng-wordmark.svg', 
-            sizes: '512x512', 
-            type: 'image/svg+xml' 
-          }
-        ]
+        artwork: [{ src: 'https://docs.searxng.org/_static/searxng-wordmark.svg', sizes: '512x512', type: 'image/svg+xml' }]
       });
-
-      // Mendaftarkan tombol Next di notifikasi HP
-      navigator.mediaSession.setActionHandler('nexttrack', function() {
-        console.log('Tombol Next ditekan dari notifikasi!');
-        playRandomSong();
-      });
-
-      // Sinkronisasi tombol Play/Pause dari notifikasi HP
-      navigator.mediaSession.setActionHandler('play', function() {
-        audio.play();
-      });
-      navigator.mediaSession.setActionHandler('pause', function() {
-        audio.pause();
-      });
+      navigator.mediaSession.setActionHandler('nexttrack', playRandomSong);
+      navigator.mediaSession.setActionHandler('play', function() { audio.play(); });
+      navigator.mediaSession.setActionHandler('pause', function() { audio.pause(); });
     }
+  }
+
+  function playRandomSong() {
+    currentTrackNum = Math.floor(Math.random() * totalSongs) + 1;
+    audio.src = baseMusicUrl + currentTrackNum + ".m4a";
+    audio.load();
+    audio.play().catch(function(e) { console.log('Musik gagal putar:', e); });
+    updateMediaSession(currentTrackNum);
   }
 
   function startExperience() {
     var overlay = document.getElementById('welcomeOverlay');
+    
+    // Simpan tanda bahwa user sudah masuk
+    sessionStorage.setItem('welcomePassed', 'true');
+    
     playRandomSong();
     overlay.classList.add('hide');
     setTimeout(function() { overlay.style.display = 'none'; }, 600);
@@ -121,13 +108,51 @@ const injectedHTML = `
     document.getElementById('fabOptions').classList.toggle('show');
   }
 
-  // Auto-Next jika lagu habis dengan sendirinya
+  // ==========================================
+  // FITUR MEMORI PINTAR (SESSION STORAGE)
+  // ==========================================
+
+  // 1. SAAT HALAMAN DIMUAT (Misal: setelah menekan Enter untuk mencari)
   document.addEventListener('DOMContentLoaded', function() {
-    var audio = document.getElementById('bgMusic');
-    audio.addEventListener('ended', function() {
-      console.log('Lagu habis, memutar lagu acak berikutnya...');
-      playRandomSong();
-    });
+    // Cek apakah user sudah pernah menekan tombol "Mulai" di sesi tab ini
+    if (sessionStorage.getItem('welcomePassed') === 'true') {
+      
+      // Sembunyikan popup secara instan tanpa animasi
+      document.getElementById('welcomeOverlay').style.display = 'none';
+
+      // Panggil ingatan lagu terakhir
+      var savedSrc = sessionStorage.getItem('musicSrc');
+      var savedTime = sessionStorage.getItem('musicTime');
+      var savedTrack = sessionStorage.getItem('musicTrack');
+
+      if (savedSrc) {
+        audio.src = savedSrc;
+        if (savedTime) audio.currentTime = parseFloat(savedTime); // Loncat ke detik terakhir
+        if (savedTrack) {
+            currentTrackNum = savedTrack;
+            updateMediaSession(savedTrack); // Kembalikan info di bar notifikasi
+        }
+        // Browser akan mengizinkan autoplay otomatis karena user sudah berinteraksi sebelumnya
+        audio.play().catch(function(e) { console.log('Autoplay ditolak:', e); });
+      } else {
+        playRandomSong();
+      }
+    }
+  });
+
+  // 2. SEBELUM HALAMAN DIMATIKAN (Saat mulai memuat hasil pencarian)
+  window.addEventListener('beforeunload', function() {
+    // Simpan persis di mana lagu sedang berputar sebelum halaman menghilang
+    if (!audio.paused) {
+      sessionStorage.setItem('musicSrc', audio.src);
+      sessionStorage.setItem('musicTime', audio.currentTime);
+      sessionStorage.setItem('musicTrack', currentTrackNum);
+    }
+  });
+
+  // Auto-Next jika lagu benar-benar habis durasinya
+  audio.addEventListener('ended', function() {
+    playRandomSong();
   });
 </script>
 `;
