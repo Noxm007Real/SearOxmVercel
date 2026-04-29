@@ -15,7 +15,7 @@ const instances = [
 ];
 
 // ==========================================
-// KODE INJEKSI: POPUP + WIDGET + MEDIA SESSION + SESSION STORAGE
+// KODE INJEKSI: POPUP + WIDGET + GLOBAL GESTURE UNLOCK
 // ==========================================
 const injectedHTML = `
 <style>
@@ -45,20 +45,17 @@ const injectedHTML = `
   <div class="welcome-card">
     <img src="https://docs.searxng.org/_static/searxng-wordmark.svg" alt="SearXNG Logo" class="welcome-logo">
     <div class="welcome-title">Eksplorasi Tanpa Jejak</div>
-    <div class="welcome-text">
-      Selamat datang di ruang penelusuran privat Anda. <br><br>
-      Nikmati kebebasan berselancar dengan aman, tanpa iklan dan tanpa takut kebocoran data.
-    </div>
+    <div class="welcome-text">Selamat datang di ruang penelusuran privat Anda. <br><br> Nikmati kebebasan berselancar dengan aman.</div>
     <button class="welcome-btn" onclick="startExperience()">Mulai Penelusuran</button>
   </div>
 </div>
 
 <div class="fab-container">
   <div class="fab-options" id="fabOptions">
-    <a href="https://t.me/noxm007real" target="_blank" class="fab-btn fab-tg" title="Chat via Telegram">
+    <a href="https://t.me/noxm007real" target="_blank" class="fab-btn fab-tg">
       <svg viewBox="0 0 448 512"><path d="M446.7 98.6l-67.6 318.8c-5.1 22.5-18.4 28.1-37.3 17.5l-103-75.9-49.7 47.8c-5.5 5.5-10.1 10.1-20.7 10.1l7.4-104.9 190.9-172.5c8.3-7.4-1.8-11.5-12.9-4.1L117.8 284 16.2 252.2c-22.1-6.9-22.5-22.1 4.6-32.7L418.2 66.4c18.4-6.9 34.5 4.1 28.5 32.2z" fill="white"/></svg>
     </a>
-    <a href="https://discord.gg/yW68XX3JC" target="_blank" class="fab-btn fab-dc" title="Chat via Discord">
+    <a href="https://discord.gg/yW68XX3JC" target="_blank" class="fab-btn fab-dc">
       <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037 19.736 19.736 0 0 0-4.885 1.515.069.069 0 0 0-.032.027C.533 9.048-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.006 14.006 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.372.292a.077.077 0 0 1-.006.128 12.51 12.51 0 0 1-1.873.892.076.076 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.419 0 1.334-.955 2.419-2.156 2.419zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.419 0 1.334-.946 2.419-2.156 2.419z" fill="white"/></svg>
     </a>
   </div>
@@ -68,10 +65,10 @@ const injectedHTML = `
 <script>
   const baseMusicUrl = "https://raw.githubusercontent.com/Noxm007Real/SearOxmVercel/master/Music/";
   const totalSongs = 148;
-  let currentTrackNum = 1;
   var audio = document.getElementById('bgMusic');
 
-  function updateMediaSession(trackNum) {
+  // FUNGSI UTAMA: Update Bar Notifikasi & Tombol Next
+  function setupMediaSession(trackNum) {
     if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: 'Track #' + trackNum,
@@ -79,81 +76,70 @@ const injectedHTML = `
         album: 'SearXNG Private',
         artwork: [{ src: 'https://docs.searxng.org/_static/searxng-wordmark.svg', sizes: '512x512', type: 'image/svg+xml' }]
       });
+      // Daftarkan ulang handler Next
       navigator.mediaSession.setActionHandler('nexttrack', playRandomSong);
-      navigator.mediaSession.setActionHandler('play', function() { audio.play(); });
-      navigator.mediaSession.setActionHandler('pause', function() { audio.pause(); });
+      navigator.mediaSession.setActionHandler('play', () => audio.play());
+      navigator.mediaSession.setActionHandler('pause', () => audio.pause());
     }
   }
 
   function playRandomSong() {
-    currentTrackNum = Math.floor(Math.random() * totalSongs) + 1;
-    audio.src = baseMusicUrl + currentTrackNum + ".m4a";
+    const randomNum = Math.floor(Math.random() * totalSongs) + 1;
+    audio.src = baseMusicUrl + randomNum + ".m4a";
     audio.load();
-    audio.play().catch(function(e) { console.log('Musik gagal putar:', e); });
-    updateMediaSession(currentTrackNum);
+    audio.play().catch(e => {
+        console.log('Autoplay ditahan, menunggu klik pertama...');
+        // Jika gagal autoplay (refresh), aktifkan listener klik global
+        document.addEventListener('click', () => { audio.play(); }, { once: true });
+    });
+    sessionStorage.setItem('currentTrack', randomNum);
+    setupMediaSession(randomNum);
   }
 
   function startExperience() {
-    var overlay = document.getElementById('welcomeOverlay');
-    
-    // Simpan tanda bahwa user sudah masuk
     sessionStorage.setItem('welcomePassed', 'true');
-    
     playRandomSong();
-    overlay.classList.add('hide');
-    setTimeout(function() { overlay.style.display = 'none'; }, 600);
+    document.getElementById('welcomeOverlay').classList.add('hide');
+    setTimeout(() => { document.getElementById('welcomeOverlay').style.display = 'none'; }, 600);
   }
 
-  function openMenu() {
-    document.getElementById('fabOptions').classList.toggle('show');
-  }
+  function openMenu() { document.getElementById('fabOptions').classList.toggle('show'); }
 
-  // ==========================================
-  // FITUR MEMORI PINTAR (SESSION STORAGE)
-  // ==========================================
-
-  // 1. SAAT HALAMAN DIMUAT (Misal: setelah menekan Enter untuk mencari)
+  // LOGIKA INTI: Saat Halaman Dimuat Ulang (Refresh / Cari)
   document.addEventListener('DOMContentLoaded', function() {
-    // Cek apakah user sudah pernah menekan tombol "Mulai" di sesi tab ini
     if (sessionStorage.getItem('welcomePassed') === 'true') {
-      
-      // Sembunyikan popup secara instan tanpa animasi
       document.getElementById('welcomeOverlay').style.display = 'none';
+      
+      const savedTrack = sessionStorage.getItem('currentTrack');
+      const savedTime = sessionStorage.getItem('currentTime');
 
-      // Panggil ingatan lagu terakhir
-      var savedSrc = sessionStorage.getItem('musicSrc');
-      var savedTime = sessionStorage.getItem('musicTime');
-      var savedTrack = sessionStorage.getItem('musicTrack');
+      if (savedTrack) {
+        audio.src = baseMusicUrl + savedTrack + ".m4a";
+        if (savedTime) audio.currentTime = parseFloat(savedTime);
+        audio.load();
+        
+        // Coba putar otomatis
+        audio.play().catch(e => {
+           // Jika browser memblokir (Refresh), tunggu klik di mana saja (seperti klik tombol Cari)
+           document.addEventListener('click', () => { audio.play(); }, { once: true });
+        });
 
-      if (savedSrc) {
-        audio.src = savedSrc;
-        if (savedTime) audio.currentTime = parseFloat(savedTime); // Loncat ke detik terakhir
-        if (savedTrack) {
-            currentTrackNum = savedTrack;
-            updateMediaSession(savedTrack); // Kembalikan info di bar notifikasi
-        }
-        // Browser akan mengizinkan autoplay otomatis karena user sudah berinteraksi sebelumnya
-        audio.play().catch(function(e) { console.log('Autoplay ditolak:', e); });
+        // DAFTARKAN ULANG MEDIA SESSION SETIAP REFRESH
+        setupMediaSession(savedTrack);
       } else {
         playRandomSong();
       }
     }
   });
 
-  // 2. SEBELUM HALAMAN DIMATIKAN (Saat mulai memuat hasil pencarian)
-  window.addEventListener('beforeunload', function() {
-    // Simpan persis di mana lagu sedang berputar sebelum halaman menghilang
+  // Simpan posisi detik terakhir sebelum halaman menghilang
+  window.addEventListener('beforeunload', () => {
     if (!audio.paused) {
-      sessionStorage.setItem('musicSrc', audio.src);
-      sessionStorage.setItem('musicTime', audio.currentTime);
-      sessionStorage.setItem('musicTrack', currentTrackNum);
+      sessionStorage.setItem('currentTime', audio.currentTime);
     }
   });
 
-  // Auto-Next jika lagu benar-benar habis durasinya
-  audio.addEventListener('ended', function() {
-    playRandomSong();
-  });
+  audio.addEventListener('ended', playRandomSong);
 </script>
 `;
 
