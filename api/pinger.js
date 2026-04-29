@@ -27,7 +27,6 @@ export default async function handler(req) {
     hour12: false 
   }).replace(/:/g, '.');
 
-  // Format sesuai keinginan Anda: [DD/MM/YYYY-HH.MM.SS]
   const timestamp = `[${tanggal}-${waktu}]`;
 
   // ==========================================
@@ -35,7 +34,6 @@ export default async function handler(req) {
   // ==========================================
   const imageUrl = "https://raw.githubusercontent.com/Noxm007Real/SearOxmVercel/master/Music/logo.jpg";
   
-  // Menggunakan pesan yang sudah Anda edit sebelumnya
   const pesanTelegram = `🌐*Status Operasional SearOxm*\n\nSistem penelusuran privat Anda saat ini beroperasi dengan rute yang optimal dan stabil. Kami mengundang Anda untuk menikmati pengalaman berselancar tanpa jejak, diiringi oleh harmoni musik yang telah disiapkan secara khusus.\n\nAkses layanan secara penuh melalui tautan berikut:\n[🔗SearOxm](https://searoxm.vercel.app)\n\n\`\`\`🕒${timestamp}\`\`\``;
   
   const pesanDiscord = `# 🌐Status Operasional SearOxm\n\`\`\`md\nSistem penelusuran privat Anda saat ini beroperasi dengan rute yang optimal dan stabil. Kami mengundang Anda untuk menikmati pengalaman berselancar tanpa jejak, diiringi oleh harmoni musik yang telah disiapkan secara khusus.\nAkses layanan secara penuh melalui tautan berikut:\`\`\`[🔗SearOxm](https://searoxm.vercel.app)\n\n\`\`\`md\n🕒${timestamp}\`\`\``;
@@ -45,7 +43,7 @@ export default async function handler(req) {
 
   try {
     // ==========================================
-    // 1. KIRIM KE TELEGRAM (Teks di Atas + Tombol Inline)
+    // 1. KIRIM KE TELEGRAM
     // ==========================================
     if (TG_TOKEN && TG_CHAT_ID) {
       const tgUrl = `https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`;
@@ -58,27 +56,27 @@ export default async function handler(req) {
         show_caption_above_media: true,
         reply_markup: {
           inline_keyboard: [
-            // Baris 1: Instagram, TikTok, Instagram
+            // Baris 1: Merah (#r)
             [
-              { text: "ɪɴsᴛᴀɢʀᴀᴍ", url: "http://instagram.com/nelson.oxm007", icon_custom_emoji_id: "5215685959298853284" },
-              { text: "ᴛɪᴋᴛᴏᴋ", url: "http://tiktok.com/im_not_npc", icon_custom_emoji_id: "5212961902061169442" },
-              { text: "ɪɴsᴛᴀɢʀᴀᴍ", url: "http://instagram.com/noxm007real", icon_custom_emoji_id: "5215685959298853284" }
+              { text: "#r 📷 ɪɴsᴛᴀɢʀᴀᴍ", url: "http://instagram.com/nelson.oxm007" },
+              { text: "™️ ᴛɪᴋᴛᴏᴋ", url: "http://tiktok.com/im_not_npc" },
+              { text: "#r 📷 ɪɴsᴛᴀɢʀᴀᴍ", url: "http://instagram.com/noxm007real" }
             ],
-            // Baris 2: WhatsApp, Discord
+            // Baris 2: Hijau (#g) & Biru (#p)
             [
-              { text: "ᴡʜᴀᴛsᴀᴘᴘ", url: "https://whatsapp.com/channel/0029VbCUCiP3gvWRDl8edm1i", icon_custom_emoji_id: "6001289379576813897" },
-              { text: "ᴅɪsᴄᴏʀᴅ", url: "https://discord.gg/yW68XX3JC", icon_custom_emoji_id: "5212920584475782268" }
+              { text: "#g 📞 ᴡʜᴀᴛsᴀᴘᴘ", url: "https://whatsapp.com/channel/0029VbCUCiP3gvWRDl8edm1i" },
+              { text: "#p 🎙 ᴅɪsᴄᴏʀᴅ", url: "https://discord.gg/yW68XX3JC" }
             ],
-            // Baris 3: Curhat, SearOxm, NGL Pro
+            // Baris 3: Biru (#p)
             [
-              { text: "ᴄᴜʀʜᴀᴛ", url: "http://curhat-online.vercel.app/", icon_custom_emoji_id: "5974475701179387553" },
-              { text: "sᴇᴀʀᴏxᴍ", url: "http://searoxm.vercel.app/", icon_custom_emoji_id: "5339112148175959615" },
-              { text: "ɴɢʟ ᴘʀᴏ", url: "http://ngl-pro.vercel.app/", icon_custom_emoji_id: "5197288647275071607" }
+              { text: "🌐 ᴄᴜʀʜᴀᴛ", url: "http://curhat-online.vercel.app/" },
+              { text: "#p 🟢 sᴇᴀʀᴏxᴍ", url: "http://searoxm.vercel.app/" },
+              { text: "🛡 ɴɢʟ ᴘʀᴏ", url: "http://ngl-pro.vercel.app/" }
             ],
-            // Baris 4: Downloader Bot, Owner
+            // Baris 4: Biru (#p) & Hijau (#g)
             [
-              { text: "ᴅᴏᴡɴʟᴏᴀᴅᴇʀ ʙᴏᴛ", url: "https://t.me/gojo_md_bot", icon_custom_emoji_id: "5972282179776940830" },
-              { text: "ᴏᴡɴᴇʀ", url: "https://t.me/noxm007real", icon_custom_emoji_id: "5764810301325184411" }
+              { text: "#p ✈️ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ ʙᴏᴛ", url: "https://t.me/gojo_md_bot" },
+              { text: "#g 🖼 ᴏᴡɴᴇʀ", url: "https://t.me/noxm007real" }
             ]
           ]
         }
@@ -100,7 +98,7 @@ export default async function handler(req) {
     }
 
     // ==========================================
-    // 2. KIRIM KE DISCORD (Embeds)
+    // 2. KIRIM KE DISCORD
     // ==========================================
     if (DISCORD_WEBHOOK) {
       const payloadDiscord = {
