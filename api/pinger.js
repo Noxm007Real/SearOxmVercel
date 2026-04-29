@@ -39,10 +39,10 @@ export default async function handler(req) {
   
   // Pesan khusus untuk Telegram (Formal & Elegan)
   // Perhatikan penggunaan garis miring terbalik (\) untuk mengamankan backtick Markdown
-  const pesanTelegram = `🌐 *Status Operasional SearOxm*\n\nSistem penelusuran privat Anda saat ini beroperasi dengan rute yang optimal dan stabil. Kami mengundang Anda untuk menikmati pengalaman berselancar tanpa jejak, diiringi oleh harmoni musik yang telah disiapkan secara khusus.\n\nAkses layanan secara penuh melalui tautan berikut:\n[🔗SearOxm](https://searoxm.vercel.app)\n\n\`\`\`🕒${timestamp}\`\`\``;
+  const pesanTelegram = `🌐*Status Operasional SearOxm*\n\nSistem penelusuran privat Anda saat ini beroperasi dengan rute yang optimal dan stabil. Kami mengundang Anda untuk menikmati pengalaman berselancar tanpa jejak, diiringi oleh harmoni musik yang telah disiapkan secara khusus.\n\nAkses layanan secara penuh melalui tautan berikut:\n[🔗SearOxm](https://searoxm.vercel.app)\n\n\`\`\`🕒${timestamp}\`\`\``;
   
   // Pesan khusus untuk Discord (Formal & Elegan)
-  const pesanDiscord = `#🌐 Status Operasional SearOxm\n\n\`\`\`md\nSistem penelusuran privat Anda saat ini beroperasi dengan rute yang optimal dan stabil. Kami mengundang Anda untuk menikmati pengalaman berselancar tanpa jejak, diiringi oleh harmoni musik yang telah disiapkan secara khusus.\n\nAkses layanan secara penuh melalui tautan berikut:\`\`\`\n[🔗SearOxm](https://searoxm.vercel.app)\n\n~#🕒${timestamp}`;
+  const pesanDiscord = `# 🌐Status Operasional SearOxm\n\`\`\`md\nSistem penelusuran privat Anda saat ini beroperasi dengan rute yang optimal dan stabil. Kami mengundang Anda untuk menikmati pengalaman berselancar tanpa jejak, diiringi oleh harmoni musik yang telah disiapkan secara khusus.\nAkses layanan secara penuh melalui tautan berikut:\`\`\`\n[🔗SearOxm](https://searoxm.vercel.app)\n~# 🕒${timestamp}`;
   
   let laporanTelegram = "Dilewati (Token/ID tidak ada)";
   let laporanDiscord = "Dilewati (Webhook tidak ada)";
@@ -58,7 +58,8 @@ export default async function handler(req) {
         chat_id: TG_CHAT_ID,
         photo: imageUrl,
         caption: pesanTelegram,
-        parse_mode: 'Markdown'
+        parse_mode: 'Markdown',
+        show_caption_above_media: true
       };
 
       const tgResponse = await fetch(tgUrl, {
