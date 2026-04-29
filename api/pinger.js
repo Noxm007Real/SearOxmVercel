@@ -56,27 +56,27 @@ export default async function handler(req) {
         show_caption_above_media: true,
         reply_markup: {
           inline_keyboard: [
-            // Baris 1: Merah (#r)
+            // Baris 1: Merah (danger)
             [
-              { text: "#r 📷 ɪɴsᴛᴀɢʀᴀᴍ", url: "http://instagram.com/nelson.oxm007" },
+              { text: "📷 ɪɴsᴛᴀɢʀᴀᴍ", url: "http://instagram.com/nelson.oxm007", style: "danger" },
               { text: "™️ ᴛɪᴋᴛᴏᴋ", url: "http://tiktok.com/im_not_npc" },
-              { text: "#r 📷 ɪɴsᴛᴀɢʀᴀᴍ", url: "http://instagram.com/noxm007real" }
+              { text: "📷 ɪɴsᴛᴀɢʀᴀᴍ", url: "http://instagram.com/noxm007real", style: "danger" }
             ],
-            // Baris 2: Hijau (#g) & Biru (#p)
+            // Baris 2: Hijau (success) & Biru (primary)
             [
-              { text: "#g 📞 ᴡʜᴀᴛsᴀᴘᴘ", url: "https://whatsapp.com/channel/0029VbCUCiP3gvWRDl8edm1i" },
-              { text: "#p 🎙 ᴅɪsᴄᴏʀᴅ", url: "https://discord.gg/yW68XX3JC" }
+              { text: "📞 ᴡʜᴀᴛsᴀᴘᴘ", url: "https://whatsapp.com/channel/0029VbCUCiP3gvWRDl8edm1i", style: "success" },
+              { text: "🎙 ᴅɪsᴄᴏʀᴅ", url: "https://discord.gg/yW68XX3JC", style: "primary" }
             ],
-            // Baris 3: Biru (#p)
+            // Baris 3: Biru (primary)
             [
               { text: "🌐 ᴄᴜʀʜᴀᴛ", url: "http://curhat-online.vercel.app/" },
-              { text: "#p 🟢 sᴇᴀʀᴏxᴍ", url: "http://searoxm.vercel.app/" },
+              { text: "🟢 sᴇᴀʀᴏxᴍ", url: "http://searoxm.vercel.app/", style: "primary" },
               { text: "🛡 ɴɢʟ ᴘʀᴏ", url: "http://ngl-pro.vercel.app/" }
             ],
-            // Baris 4: Biru (#p) & Hijau (#g)
+            // Baris 4: Biru (primary) & Hijau (success)
             [
-              { text: "#p ✈️ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ ʙᴏᴛ", url: "https://t.me/gojo_md_bot" },
-              { text: "#g 🖼 ᴏᴡɴᴇʀ", url: "https://t.me/noxm007real" }
+              { text: "✈️ ᴅᴏᴡɴʟᴏᴀᴅᴇʀ ʙᴏᴛ", url: "https://t.me/gojo_md_bot", style: "primary" },
+              { text: "🖼 ᴏᴡɴᴇʀ", url: "https://t.me/noxm007real", style: "success" }
             ]
           ]
         }
