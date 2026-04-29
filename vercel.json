@@ -1,9 +1,12 @@
 {
   "rewrites": [
     {
+      "source": "/api/pinger",
+      "destination": "/api/pinger"
+    },
+    {
       "source": "/(.*)",
       "destination": "/api/index"
     }
   ]
 }
-
